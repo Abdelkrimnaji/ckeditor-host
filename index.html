@@ -1,25 +1,71 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
-    <style>
-      html, body {
-        margin: 0;
-        height: 100%;
+<head>
+  <meta charset="UTF-8" />
+  <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: sans-serif;
+    }
+    #editor {
+      height: 80%;
+      padding: 1rem;
+    }
+    #validateBtn {
+      height: 20%;
+      background-color: #1976d2;
+      color: white;
+      font-size: 16px;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="editor">Écris ta description ici...</div>
+  <button id="validateBtn">✅ Enregistrer dans Firestore</button>
+
+  <script>
+    // 🔐 Configuration Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBri-sHIseeOkpfu1HVOvsJabgujxytmPo",
+      authDomain: "swim-for-change-fdd60.firebaseapp.com",
+      projectId: "swim-for-change-fdd60",
+      storageBucket: "swim-for-change-fdd60.firebasestorage.app",
+      messagingSenderId: "827970902635",
+      appId: "1:827970902635:web:b17e8e4c67e076a02faf2e"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let editorInstance;
+
+    ClassicEditor.create(document.querySelector('#editor'))
+      .then(editor => {
+        editorInstance = editor;
+      })
+      .catch(console.error);
+
+    document.getElementById('validateBtn').addEventListener('click', async () => {
+      const content = editorInstance.getData();
+      try {
+        await db.collection('contenus').add({
+          html: content,
+          date: new Date()
+        });
+        alert("✅ Contenu enregistré avec succès !");
+      } catch (error) {
+        alert("❌ Erreur lors de l'enregistrement : " + error.message);
       }
-      #editor {
-        height: 100%;
-        box-sizing: border-box;
-        padding: 1rem;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="editor">Écris ta description ici...</div>
-    <script>
-      ClassicEditor.create(document.querySelector('#editor'))
-        .catch(error => console.error(error));
-    </script>
-  </body>
+    });
+  </script>
+
+</body>
 </html>
