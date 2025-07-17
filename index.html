@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+    <style>
+      html, body {
+        margin: 0;
+        height: 100%;
+      }
+      #editor {
+        height: 100%;
+        box-sizing: border-box;
+        padding: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="editor">Écris ta description ici...</div>
+    <script>
+      ClassicEditor.create(document.querySelector('#editor'))
+        .catch(error => console.error(error));
+    </script>
+  </body>
+</html>
